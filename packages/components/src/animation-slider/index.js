@@ -3,6 +3,7 @@
  * External dependencies
  */
 import { Component, createRef } from '@wordpress/element';
+import { focus } from '@wordpress/dom';
 import classnames from 'classnames';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
@@ -26,13 +27,16 @@ class AnimationSlider extends Component {
 		if ( onExited ) {
 			onExited();
 		}
-		if ( focusOnChange ) {
-			const focusable = this.container.current.querySelector(
-				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-			);
-			if ( focusable ) {
-				focusable.focus();
-			}
+
+		if ( false === focusOnChange || ! this.container.current ) {
+			return;
+		}
+
+		const tabbableIndex = true === focusOnChange ? 0 : focusOnChange;
+		const tabbable = focus.tabbable.find( this.container.current )[ tabbableIndex ];
+
+		if ( tabbable ) {
+			tabbable.focus();
 		}
 	}
 
@@ -76,7 +80,7 @@ AnimationSlider.propTypes = {
 	/**
 	 * When set to true, the first focusable element will be focused after an animation has finished.
 	 */
-	focusOnChange: PropTypes.bool,
+	// focusOnChange: PropTypes.bool,
 };
 
 export default AnimationSlider;
