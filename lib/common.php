@@ -5,27 +5,7 @@
  * @package WooCommerce Admin
  */
 
-/**
- * Retrieves the root plugin path.
- *
- * @param  string $file Optional relative path of the desired file.
- *
- * @return string Root path to the gutenberg custom fields plugin.
- */
-function wc_admin_dir_path( $file = '' ) {
-	return plugin_dir_path( dirname( __FILE__ ) ) . $file;
-}
-
-/**
- * Retrieves a URL to a file in the gutenberg custom fields plugin.
- *
- * @param  string $path Relative path of the desired file.
- *
- * @return string       Fully qualified URL pointing to the desired file.
- */
-function wc_admin_url( $path ) {
-	return plugins_url( $path, dirname( __FILE__ ) );
-}
+// @todo This file is related to the Activity Panel feature, and can be moved to a specific folder/class loader.
 
 /**
  * Returns the current screen ID.
@@ -251,47 +231,4 @@ function wc_admin_get_embed_enabled_plugin_screen_ids() {
  */
 function wc_admin_get_embed_enabled_screen_ids() {
 	return array_merge( wc_admin_get_embed_enabled_core_screen_ids(), wc_admin_get_embed_enabled_plugin_screen_ids() );
-}
-
-/**
- * Return an object defining the currecy options for the site's current currency
- *
- * @return  array  Settings for the current currency {
- *     Array of settings.
- *
- *     @type string $code       Currency code.
- *     @type string $precision  Number of decimals.
- *     @type string $symbol     Symbol for currency.
- * }
- */
-function wc_admin_currency_settings() {
-	$code = get_woocommerce_currency();
-
-	return apply_filters(
-		'wc_currency_settings',
-		array(
-			'code'               => $code,
-			'precision'          => wc_get_price_decimals(),
-			'symbol'             => html_entity_decode( get_woocommerce_currency_symbol( $code ) ),
-			'position'           => get_option( 'woocommerce_currency_pos' ),
-			'decimal_separator'  => wc_get_price_decimal_separator(),
-			'thousand_separator' => wc_get_price_thousand_separator(),
-			'price_format'       => html_entity_decode( get_woocommerce_price_format() ),
-		)
-	);
-}
-
-/**
- * Returns if a specific wc-admin feature is enabled.
- *
- * @param  string $feature Feature slug.
- * @return bool Returns true if the feature is enabled.
- * }
- */
-function wc_admin_is_feature_enabled( $feature ) {
-	if ( ! function_exists( 'wc_admin_get_feature_config' ) ) {
-		return false;
-	}
-	$features = wc_admin_get_feature_config();
-	return isset( $features[ $feature ] ) && true === $features[ $feature ];
 }
