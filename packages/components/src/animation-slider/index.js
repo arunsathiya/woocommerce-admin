@@ -65,10 +65,6 @@ AnimationSlider.propTypes = {
 	 * null, 'left', 'right', to designate which direction to slide on a change.
 	 */
 	animate: PropTypes.oneOf( [ null, 'left', 'right' ] ),
-	/**
-	 * When set to true, the first focusable element will be focused after an animation has finished.
-	 */
-	// focusOnChange: PropTypes.bool,
 };
 
 export default AnimationSlider;
