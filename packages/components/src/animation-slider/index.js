@@ -3,7 +3,6 @@
  * External dependencies
  */
 import { Component, createRef } from '@wordpress/element';
-import { focus } from '@wordpress/dom';
 import classnames from 'classnames';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
@@ -23,20 +22,9 @@ class AnimationSlider extends Component {
 	}
 
 	onExited() {
-		const { onExited, focusOnChange } = this.props;
+		const { onExited } = this.props;
 		if ( onExited ) {
-			onExited();
-		}
-
-		if ( false === focusOnChange || ! this.container.current ) {
-			return;
-		}
-
-		const tabbableIndex = true === focusOnChange ? 0 : focusOnChange;
-		const tabbable = focus.tabbable.find( this.container.current )[ tabbableIndex ];
-
-		if ( tabbable ) {
-			tabbable.focus();
+			onExited( this.container.current );
 		}
 	}
 

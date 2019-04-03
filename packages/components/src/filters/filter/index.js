@@ -4,6 +4,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { Button, Dropdown, IconButton } from '@wordpress/components';
+import { focus } from '@wordpress/dom';
 import classnames from 'classnames';
 import { Component } from '@wordpress/element';
 import { find, partial, last, get, includes } from 'lodash';
@@ -42,6 +43,7 @@ class FilterPicker extends Component {
 		this.getVisibleFilters = this.getVisibleFilters.bind( this );
 		this.updateSelectedTag = this.updateSelectedTag.bind( this );
 		this.onTagChange = this.onTagChange.bind( this );
+		this.onContentMount = this.onContentMount.bind( this );
 		this.goBack = this.goBack.bind( this );
 
 		if ( selectedFilter.settings && selectedFilter.settings.getLabels ) {
@@ -168,6 +170,14 @@ class FilterPicker extends Component {
 		);
 	}
 
+	onContentMount( content ) {
+		const { nav } = this.state;
+		const parentFilter = nav.length ? this.getFilter( nav[ nav.length - 1 ] ) : false;
+		const focusableIndex = parentFilter ? 1 : 0;
+		const focusable = focus.tabbable.find( content )[ focusableIndex ];
+		focusable.focus();
+	}
+
 	render() {
 		const { config } = this.props;
 		const { nav, animate } = this.state;
@@ -182,7 +192,8 @@ class FilterPicker extends Component {
 					position="bottom"
 					expandOnMobile
 					headerTitle={ __( 'filter report to show:', 'woocommerce-admin' ) }
-					focusOnMount={ parentFilter ? 1 : 0 }
+					focusOnMount={ false }
+					onMount={ this.onContentMount }
 					renderToggle={ ( { isOpen, onToggle } ) => (
 						<DropdownButton
 							onClick={ onToggle }
@@ -191,7 +202,7 @@ class FilterPicker extends Component {
 						/>
 					) }
 					renderContent={ ( { onClose } ) => (
-						<AnimationSlider animationKey={ nav } animate={ animate } focusOnChange={ parentFilter ? 1 : 0 }>
+						<AnimationSlider animationKey={ nav } animate={ animate } onExited={ this.onContentMount }>
 							{ () => (
 								<ul className="woocommerce-filters-filter__content-list">
 									{ parentFilter && (
