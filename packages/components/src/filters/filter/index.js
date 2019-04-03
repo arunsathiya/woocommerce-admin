@@ -175,7 +175,9 @@ class FilterPicker extends Component {
 		const parentFilter = nav.length ? this.getFilter( nav[ nav.length - 1 ] ) : false;
 		const focusableIndex = parentFilter ? 1 : 0;
 		const focusable = focus.tabbable.find( content )[ focusableIndex ];
-		focusable.focus();
+		setTimeout( () => {
+			focusable.focus();
+		}, 0 );
 	}
 
 	render() {
