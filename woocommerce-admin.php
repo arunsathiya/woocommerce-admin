@@ -220,20 +220,14 @@ add_action( 'plugins_loaded', 'wc_admin_plugins_loaded' );
  * @param array $features Array of feature slugs.
  */
 function wc_admin_overwrite_features( $features ) {
-	require_once WC_ADMIN_ABSPATH . '/includes/feature-config.php';
+	if ( ! function_exists( 'wc_admin_get_feature_config' ) ) {
+		require_once WC_ADMIN_ABSPATH . '/includes/feature-config.php';
+	}
 	$feature_config = wc_admin_get_feature_config();
 	$features       = array_keys( array_filter( $feature_config ) );
 	return $features;
 }
 add_filter( 'woocommerce_admin_features', 'wc_admin_overwrite_features' );
-
-/**
- * Things to do after WooCommerce updates.
- */
-function wc_admin_woocommerce_updated() {
-	WC_Admin_Notes_Settings_Notes::add_notes_for_settings_that_have_moved();
-}
-add_action( 'woocommerce_updated', 'wc_admin_woocommerce_updated' );
 
 /*
  * Remove the emoji script as it always defaults to replacing emojis with Twemoji images.
@@ -271,19 +265,3 @@ function wc_admin_load_plugin_textdomain() {
 	load_plugin_textdomain( 'woocommerce-admin', false, basename( dirname( __FILE__ ) ) . '/languages' );
 }
 add_action( 'plugins_loaded', 'wc_admin_load_plugin_textdomain' );
-
-/**
- * Returns true if we are on a "classic" (non JS app) powered admin page.
- * `wc_get_screen_ids` will also return IDs for extensions that have properly registered themselves.
- *
- * @param bool $is_embed If the current page should embed the WooCommerce target area (activity panel, notices, etc).
- */
-function wc_admin_is_embed_enabled_wc_page( $is_embed ) {
-	if ( ! WC_Admin_Loader::is_feature_enabled( 'activity-panels' ) && ! WC_Admin_Loader::is_feature_enabled( 'store-alerts' ) ) {
-		return false;
-	}
-
-	return $is_embed;
-}
-
-add_action( 'woocommerce_page_is_embed_page', 'wc_admin_is_embed_enabled_wc_page' );
